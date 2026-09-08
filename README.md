@@ -6,8 +6,10 @@
 *Seamlessly integrates Global (PvPTiers, MCTiers, Subtiers) and Czechoslovak (CZ/SK) competitive PvP ranking systems.*
 
 [![Fabric](https://img.shields.io/badge/ModLoader-Fabric-1f2328.svg?logo=fabric&logoColor=white)](https://fabricmc.net/)
+[![Environment](https://img.shields.io/badge/Environment-Client--Side_Only-brightgreen.svg)]()
 [![Minecraft Versions](https://img.shields.io/badge/Minecraft-26.2_%7C_1.21.x-388e3c.svg?logo=minecraft&logoColor=white)](https://minecraft.net/)
 [![Java](https://img.shields.io/badge/Java-21_%7C_25-f89820.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
+[![Modrinth](https://img.shields.io/badge/Modrinth-czsk--multitiers-00AF5C.svg?logo=modrinth&logoColor=white)](https://modrinth.com/mod/czsk-multitiers)
 [![Version](https://img.shields.io/badge/Release-v1.0.0-0969da.svg)](https://github.com/Ahojda231/CZ-SK-MultiTiers)
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
