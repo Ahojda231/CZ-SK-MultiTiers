@@ -1,0 +1,348 @@
+package com.tiers.screens;
+
+import com.mojang.blaze3d.platform.NativeImage;
+import com.tiers.TiersClient;
+import com.tiers.profile.GameMode;
+import com.tiers.profile.PlayerProfile;
+import com.tiers.profile.Status;
+import com.tiers.profile.types.CZSKB0tProfile;
+import com.tiers.profile.types.CZSKSubtiersProfile;
+import com.tiers.profile.types.CZSKTiersProfile;
+import com.tiers.profile.types.MCTiersProfile;
+import com.tiers.profile.types.PvPTiersProfile;
+import com.tiers.profile.types.SubtiersProfile;
+import com.tiers.profile.types.SuperProfile;
+import com.tiers.textures.ColorControl;
+import com.tiers.textures.Icons;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.Util;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import static com.tiers.TiersClient.LOGGER;
+
+public class PlayerSearchResultScreen extends Screen {
+    private final PlayerProfile playerProfile;
+    private final ResourceLocation playerAvatarTexture = ResourceLocation.parse("");
+
+    private int selectedTab = 0; // 0 = Globální, 1 = CZ/SK
+    private Button globalTabButton;
+    private Button czskTabButton;
+    Button dimensionsWarning;
+
+    private int separator;
+    private boolean small;
+    private boolean tooSmall;
+    private boolean imageReady;
+    private boolean toastShown;
+
+    public PlayerSearchResultScreen(PlayerProfile playerProfile) {
+        super(Component.literal(playerProfile.name));
+        this.playerProfile = playerProfile;
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float a) {
+        if (!playerProfile.isPlayerValid()) {
+            onClose();
+            return;
+        }
+
+        if (playerProfile.nameChanged && !toastShown) {
+            SystemToast.add(Minecraft.getInstance().getToastManager(), SystemToast.SystemToastId.NARRATOR_TOGGLE, Component.literal("Recent name change"), Component.literal("(" + playerProfile.name + " to " + playerProfile.inGameName + ") Data should be accurate"));
+            toastShown = true;
+        }
+
+        int centerX = width / 2;
+        int listY = (int) (height / 2.65);
+        separator = height / 23;
+        small = width < 575 || height < 420;
+        tooSmall = width < 430 || height < 262;
+        int firstListX = (int) (centerX - width / 3.5) - 25;
+        int thirdListX = (int) (centerX + width / 3.5) + 25;
+        int avatarY = height / 55 + 12;
+
+        super.render(graphics, mouseX, mouseY, a);
+
+        dimensionsWarning.visible = small;
+        if (tooSmall) {
+            dimensionsWarning.setMessage(Component.literal("⚠"));
+            dimensionsWarning.setTooltip(Tooltip.create(Component.literal("Your window dimensions (" + width + "x" + height + ") are too small\nLower the GUI scale or make the window bigger! (min: 430x262)")));
+        }
+
+        if (playerProfile.status == Status.SEARCHING) {
+            graphics.drawCenteredString(font, Component.literal("Searching for " + playerProfile.name + "..."), centerX, listY, ColorControl.getColorMinecraftStandard("green"));
+            return;
+        }
+
+        if (playerProfile.numberOfImageRequests == 0)
+            playerProfile.savePlayerImage();
+
+        drawPlayerAvatar(graphics, centerX, avatarY);
+        if (!imageReady)
+            graphics.drawCenteredString(font, Component.literal("Loading " + playerProfile.name + "'s skin"), centerX, avatarY + 50, ColorControl.getColorMinecraftStandard("green"));
+
+        graphics.drawCenteredString(font, playerProfile.getFullName(), centerX, height / 55, CommonColors.WHITE);
+
+        if (selectedTab == 0) {
+            drawCategoryList(graphics, MCTiersProfile.MCTIERS_IMAGE, playerProfile.profileMCTiers, firstListX, listY);
+            drawCategoryList(graphics, PvPTiersProfile.PVPTIERS_IMAGE, playerProfile.profilePvPTiers, centerX, listY);
+            drawCategoryList(graphics, SubtiersProfile.SUBTIERS_IMAGE, playerProfile.profileSubtiers, thirdListX, listY);
+        } else {
+            drawCategoryList(graphics, CZSKTiersProfile.CZSKTIERS_IMAGE, playerProfile.profileCZSKTiers, firstListX, listY);
+            drawCategoryList(graphics, CZSKB0tProfile.CZSK_B0T_IMAGE, playerProfile.profileCZSKB0t, centerX, listY);
+            drawCategoryList(graphics, CZSKSubtiersProfile.CZSK_SUBTIERS_IMAGE, playerProfile.profileCZSKSubtiers, thirdListX, listY);
+        }
+    }
+
+    private void drawCategoryList(GuiGraphics graphics, ResourceLocation image, SuperProfile superProfile, int x, int y) {
+        if (superProfile == null) {
+            graphics.drawCenteredString(font, "Loading from API...", x, (int) (y + 2.8 * separator), ColorControl.getColorMinecraftStandard("green"));
+            return;
+        }
+
+        if (image == MCTiersProfile.MCTIERS_IMAGE)
+            graphics.blit(RenderPipelines.GUI_TEXTURED, image, x - 64, (int) (y + 2.4 * separator) + 4 - 38, 0, 0, 128, 24, 128, 24);
+        else if (image == PvPTiersProfile.PVPTIERS_IMAGE)
+            graphics.blit(RenderPipelines.GUI_TEXTURED, image, x - 12, (int) (y + 2.4 * separator) + 4 - 38, 0, 0, 24, 24, 24, 24);
+        else
+            graphics.blit(RenderPipelines.GUI_TEXTURED, image, (int) (x - 15.5), (int) (y + 2.4 * separator) - 38, 0, 0, 31, 31, 31, 31);
+
+        if (superProfile.status == Status.SEARCHING) {
+            graphics.drawCenteredString(font, "Searching...", x, (int) (y + 2.8 * separator), ColorControl.getColorMinecraftStandard("green"));
+            return;
+        } else if (superProfile.status == Status.NOT_EXISTING) {
+            graphics.drawCenteredString(font, "Unranked", x, (int) (y + 2.8 * separator), ColorControl.getColorMinecraftStandard("red"));
+            return;
+        } else if (superProfile.status == Status.TIMEOUTED) {
+            graphics.drawCenteredString(font, "Search timeouted", x, (int) (y + 2.8 * separator), ColorControl.getColorMinecraftStandard("red"));
+            renderFailedRequestMessage(graphics, superProfile, x, y);
+            return;
+        } else if (superProfile.status == Status.API_ISSUE) {
+            graphics.drawCenteredString(font, Component.literal("Search failed: API issue"), x, (int) (y + 2.8 * separator), ColorControl.getColorMinecraftStandard("red"));
+            renderFailedRequestMessage(graphics, superProfile, x, y);
+
+            graphics.drawCenteredString(font, "Update Tiers or retry in a while", x, (int) (y + 2.8 * separator + 50), CommonColors.YELLOW);
+            if (!superProfile.apiErrorShown) {
+                addRenderableWidget(Button.builder(Component.literal("Report issue"), (btn) -> {
+                    Minecraft client = Minecraft.getInstance();
+                    client.setScreenAndShow(new ConfirmLinkScreen((confirmed) -> {
+                        if (confirmed)
+                            Util.getPlatform().openUri("https://github.com/PvPTiers/Tiers/issues");
+                        client.setScreenAndShow(this);
+                    }, "https://github.com/PvPTiers/Tiers/issues", true));
+                }).bounds(x - 40, (int) (y + 2.8 * separator + 50 + 12), 80, 20).tooltip(Tooltip.create(Component.literal("Report this issue on GitHub. Make sure to report only if the same search on either mctiers.com, pvptiers.com or subtiers.com doesn't fail"))).build());
+                superProfile.apiErrorShown = true;
+            }
+            return;
+        }
+
+        if (!superProfile.drawn) {
+            StringWidget regionLabel = new StringWidget(Icons.colorText("Region", "region"), font);
+            regionLabel.setPosition(x - 44, (int) (y + 2.4 * separator));
+            addRenderableWidget(regionLabel);
+
+            StringWidget overallLabel = new StringWidget(Icons.colorText("Overall", "overall"), font);
+            overallLabel.setPosition(x - 44, (int) (y + 2.4 * separator) + 16);
+            addRenderableWidget(overallLabel);
+
+            StringWidget regionIcon = new StringWidget(Icons.GLOBE, font);
+            regionIcon.setPosition(x - 64, (int) (y + 2.4 * separator + 2));
+            regionIcon.setTooltip(Tooltip.create(regionLabel.getMessage()));
+            addRenderableWidget(regionIcon);
+
+            StringWidget overallIcon = new StringWidget(Icons.OVERALL, font);
+            overallIcon.setPosition(x - 64, (int) (y + 2.4 * separator + 2) + 16);
+            overallIcon.setTooltip(Tooltip.create(overallLabel.getMessage()));
+            addRenderableWidget(overallIcon);
+
+            StringWidget region = new StringWidget(superProfile.displayedRegion, font);
+            region.setPosition(x + 52 - (superProfile.displayedRegion.getString().length() - 2) * 3, (int) (y + 2.4 * separator));
+            region.setTooltip(Tooltip.create(superProfile.regionTooltip));
+            addRenderableWidget(region);
+
+            StringWidget overall = new StringWidget(superProfile.displayedOverall, font);
+            overall.setPosition(x + 52 - (superProfile.displayedOverall.getString().length() - 2) * 3, (int) (y + 2.4 * separator) + 16);
+            overall.setTooltip(Tooltip.create(superProfile.overallTooltip));
+            addRenderableWidget(overall);
+
+            drawTierList(superProfile, x - 64, (int) (y + 2.4 * separator) + 40);
+
+            if (superProfile.discordId != null) {
+                addRenderableWidget(Button.builder(Icons.DISCORD, (btn) -> {
+                    Minecraft client = Minecraft.getInstance();
+                    client.setScreenAndShow(new ConfirmLinkScreen((confirmed) -> {
+                        if (confirmed)
+                            Util.getPlatform().openUri("https://discord.com/users/" + superProfile.discordId);
+                        client.setScreenAndShow(this);
+                    }, "https://discord.com/users/" + superProfile.discordId, true));
+                }).bounds(width - 20 - 5 - 24, height - 20 - 5, 20, 20).tooltip(Tooltip.create(Component.literal("Open " + playerProfile.targetName + "'s Discord profile"))).build());
+            }
+
+            superProfile.drawn = true;
+        }
+    }
+
+    private void renderFailedRequestMessage(GuiGraphics graphics, SuperProfile superProfile, int x, int y) {
+        String[] messages = superProfile.checkOutages();
+        graphics.drawCenteredString(font, messages[0], x, (int) (y + 2.8 * separator) + 15, CommonColors.YELLOW);
+        graphics.drawCenteredString(font, messages[1], x, (int) (y + 2.8 * separator) + 25, CommonColors.YELLOW);
+        graphics.drawCenteredString(font, messages[2], x, (int) (y + 2.8 * separator) + 35, CommonColors.YELLOW);
+    }
+
+    private void drawTierList(SuperProfile superProfile, int x, int y) {
+        int originalX = x;
+        if (small) {
+            y -= 7;
+            int count = 1;
+            int stage = 0;
+            for (GameMode gameMode : superProfile.gameModes) {
+                if (drawGameModeTiers(gameMode, x + 5, y + stage * 36)) {
+                    x += 35;
+                    if (count % 4 == 0) {
+                        stage++;
+                        x = originalX;
+                    }
+                    count++;
+                }
+            }
+        } else {
+            for (GameMode gameMode : superProfile.gameModes)
+                if (drawGameModeTiers(gameMode, x, y)) y += 15;
+        }
+    }
+
+    private boolean drawGameModeTiers(GameMode mode, int x, int y) {
+        if (mode.drawn || mode.status != Status.READY)
+            return false;
+
+        StringWidget icon = new StringWidget(mode.gamemode.getIcon(), font);
+        icon.setPosition(x, y + 3);
+        if (small)
+            icon.setPosition(x, y + 3);
+        icon.setTooltip(Tooltip.create(mode.gamemode.getTextLabel()));
+        addRenderableWidget(icon);
+
+        StringWidget label = new StringWidget(mode.gamemode.getTextLabel(), font);
+        label.setPosition(x + 20, y);
+        if (!small)
+            addRenderableWidget(label);
+
+        StringWidget tier = new StringWidget(mode.displayedTier, font);
+        tier.setPosition(x + 114 - (mode.displayedTier.getString().length() - 3) * 3, y);
+        if (small)
+            tier.setPosition(x - 2 - (mode.displayedTier.getString().length() - 3) * 2, y + 14);
+        tier.setTooltip(Tooltip.create(mode.tierTooltip));
+        addRenderableWidget(tier);
+
+        if (mode.hasPeak && mode.peakTierTooltip.getStyle().getColor() != null) {
+            StringWidget peakTier = new StringWidget(mode.displayedPeakTier, font);
+            peakTier.setPosition(x + 136, y);
+            if (small)
+                peakTier.setPosition(x - 6, y + 24);
+            peakTier.setTooltip(Tooltip.create(mode.peakTierTooltip));
+            addRenderableWidget(peakTier);
+        }
+
+        mode.drawn = true;
+
+        return true;
+    }
+
+    private void drawPlayerAvatar(GuiGraphics graphics, int x, int y) {
+        if (imageReady) {
+            if (playerProfile.imageSaved == 1 || playerProfile.imageSaved == 2)
+                graphics.blit(RenderPipelines.GUI_TEXTURED, playerAvatarTexture, x - width / 32, y, 0, 0, width / 16, (int) (width / 6.666), width / 16, (int) (width / 6.666));
+            else if (playerProfile.imageSaved < 6 && playerProfile.imageSaved > 2)
+                graphics.blit(RenderPipelines.GUI_TEXTURED, playerAvatarTexture, (int) (x - width / 22.5), y, 0, 0, (int) (width / 11.25), (int) (width / 6.666), (int) (width / 11.25), (int) (width / 6.666));
+        } else if (playerProfile.imageSaved != 0) {
+            loadPlayerAvatar();
+        } else if (playerProfile.numberOfImageRequests >= 6)
+            graphics.drawCenteredString(font, Component.literal(playerProfile.name + "'s skin failed to load. Clear cache and retry"), x, y + 50, ColorControl.getColorMinecraftStandard("red"));
+    }
+
+    private void loadPlayerAvatar() {
+        if (imageReady)
+            return;
+
+        try (FileInputStream fileInputStream = new FileInputStream(FabricLoader.getInstance().getGameDir().resolve("cache/tiers/players/" + playerProfile.uuid + ".png").toFile())) {
+            Minecraft.getInstance().getTextureManager().register(playerAvatarTexture, new DynamicTexture(String::new, NativeImage.read(fileInputStream)));
+            imageReady = true;
+        } catch (IOException ignored) {
+            LOGGER.warn("Error loading player skin");
+        }
+    }
+
+    private void switchTab(int tab) {
+        if (selectedTab != tab) {
+            selectedTab = tab;
+            playerProfile.resetDrawnStatus();
+            clearWidgets();
+            init();
+        }
+    }
+
+    @Override
+    public void init() {
+        playerProfile.resetDrawnStatus();
+
+        dimensionsWarning = Button.builder(Component.literal("ℹ"), (btn) -> {
+        }).bounds(width - 20 - 5, 5, 20, 20).tooltip(Tooltip.create(Component.literal("Your window dimensions (" + width + "x" + height + ") are small\nLower the GUI scale or make the window bigger to have a better experience (ideal: 575x420)"))).build();
+        dimensionsWarning.active = false;
+        dimensionsWarning.visible = small;
+        if (tooSmall) {
+            dimensionsWarning.setMessage(Component.literal("⚠"));
+            dimensionsWarning.setTooltip(Tooltip.create(Component.literal("Your window dimensions (" + width + "x" + height + ") are too small\nLower the GUI scale or make the window bigger! (min: 430x262)")));
+        }
+        addRenderableWidget(dimensionsWarning);
+
+        globalTabButton = Button.builder(Component.literal("Globální"), (btn) -> switchTab(0))
+                .bounds(5, 5, 75, 20)
+                .tooltip(Tooltip.create(Component.literal("Zobrazit MCTiers, PvPTiers a Subtiers")))
+                .build();
+        globalTabButton.active = (selectedTab != 0);
+        addRenderableWidget(globalTabButton);
+
+        czskTabButton = Button.builder(Component.literal("CZ/SK"), (btn) -> switchTab(1))
+                .bounds(83, 5, 75, 20)
+                .tooltip(Tooltip.create(Component.literal("Zobrazit CZSKTiers.com, CZSK (b0tfleyz) a CZSK Subtiers")))
+                .build();
+        czskTabButton.active = (selectedTab != 1);
+        addRenderableWidget(czskTabButton);
+
+        addRenderableWidget(Button.builder(Icons.NAMEMC, (btn) -> {
+            Minecraft client = Minecraft.getInstance();
+            client.setScreenAndShow(new ConfirmLinkScreen((confirmed) -> {
+                if (confirmed)
+                    Util.getPlatform().openUri("https://namemc.com/profile/" + playerProfile.uuid);
+                client.setScreenAndShow(this);
+            }, "https://namemc.com/profile/" + playerProfile.uuid, true));
+        }).bounds(width - 20 - 5, height - 20 - 5, 20, 20).tooltip(Tooltip.create(Component.literal("Open " + playerProfile.targetName + "'s NameMC page"))).build());
+
+        addRenderableWidget(Button.builder(Component.literal("Update"), (btn) -> TiersClient.showUpdatedPlayerProfile(playerProfile, true)).bounds(5, height - 20 - 5, 68, 20).tooltip(Tooltip.create(Component.literal("Reload the player profile"))).build());
+
+        if (selectedTab == 0) {
+            addRenderableWidget(Button.builder(Icons.CYCLE, (btn) -> playerProfile.updateTierlistProfiles(1)).bounds(5, height - 20 - 5 - 22, 20, 20).tooltip(Tooltip.create(Component.literal("Update MCTiers results"))).build());
+            addRenderableWidget(Button.builder(Icons.CYCLE, (btn) -> playerProfile.updateTierlistProfiles(2)).bounds(5 + 24, height - 20 - 5 - 22, 20, 20).tooltip(Tooltip.create(Component.literal("Update PvPTiers results"))).build());
+            addRenderableWidget(Button.builder(Icons.CYCLE, (btn) -> playerProfile.updateTierlistProfiles(3)).bounds(5 + 24 + 24, height - 20 - 5 - 22, 20, 20).tooltip(Tooltip.create(Component.literal("Update Subtiers results"))).build());
+        } else {
+            addRenderableWidget(Button.builder(Icons.CYCLE, (btn) -> playerProfile.updateTierlistProfiles(4)).bounds(5, height - 20 - 5 - 22, 20, 20).tooltip(Tooltip.create(Component.literal("Update CZSKTiers.com results"))).build());
+            addRenderableWidget(Button.builder(Icons.CYCLE, (btn) -> playerProfile.updateTierlistProfiles(5)).bounds(5 + 24, height - 20 - 5 - 22, 20, 20).tooltip(Tooltip.create(Component.literal("Update CZSK (b0tfleyz) results"))).build());
+            addRenderableWidget(Button.builder(Icons.CYCLE, (btn) -> playerProfile.updateTierlistProfiles(6)).bounds(5 + 24 + 24, height - 20 - 5 - 22, 20, 20).tooltip(Tooltip.create(Component.literal("Update CZSK Subtiers results"))).build());
+        }
+    }
+}

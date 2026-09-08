@@ -1,0 +1,47 @@
+﻿{
+  "schemaVersion": 1,
+  "id": "tiers",
+  "version": "${version}",
+  "name": "CZ/SK-MultiTIers",
+  "description": "CZ/SK-MultiTIers v1.0.0 - komunitní edice Tiers módu s podporou CZSKTiers.com, CZSK (b0tfleyz) a CZSK Subtiers žebříčků. Fork původního módu Tiers (https://github.com/PvPTiers/Tiers).",
+  "authors": [
+    "Saukr"
+  ],
+  "contributors": [
+    "Flavio6561 (Původní autor Tiers)"
+  ],
+  "license": "GPL-3.0",
+  "contact": {
+    "issues": "https://github.com/PvPTiers/Tiers/issues",
+    "homepage": "https://github.com/PvPTiers/Tiers"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "Původní GitHub": "https://github.com/PvPTiers/Tiers",
+        "Původní Modrinth": "https://modrinth.com/mod/tiers"
+      }
+    }
+  },
+  "icon": "assets/tiers/icon.png",
+  "entrypoints": {
+    "client": [
+      "com.tiers.TiersClient"
+    ],
+    "modmenu": [
+      "com.tiers.misc.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "tiers.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.5",
+    "minecraft": ["${minecraft_version}"],
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

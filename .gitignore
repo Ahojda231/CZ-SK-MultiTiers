@@ -1,0 +1,15 @@
+﻿# Gradle build directories
+.gradle/
+build/
+!jars/*.jar
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Logs and scratch
+*.log
+scratch/
