@@ -1,6 +1,6 @@
-﻿<div align="center">
+<div align="center">
 
-# ⚔️ CZ/SK-MultiTIers 1.0.0
+# ⚔️ CZ/SK-MultiTIers `v1.0.0`
 
 **The ultimate Fabric mod for Minecraft PvP players with native dual-tierlist support.**  
 *Seamlessly integrates Global (PvPTiers, MCTiers, Subtiers) and Czechoslovak (CZ/SK) competitive PvP ranking systems.*
@@ -26,7 +26,7 @@
 
 <br>
 
-### ⚙️ Independent Dual Configuration Panels (/tiers -config)
+### ⚙️ Independent Dual Configuration Panels (`/tiers -config`)
 
 | 🌐 Global Leaderboards Panel | 🇨🇿🇸🇰 CZ/SK Community Leaderboards Panel |
 | :---: | :---: |
@@ -38,34 +38,34 @@
 ## ✨ Key Features
 
 - **🏆 6 Supported Leaderboard & Tier Systems:**
-  - 🌐 **MCTiers** (mctiers.com)
-  - 🌐 **PvPTiers** (pvptiers.com)
-  - 🌐 **Subtiers** (subtiers.net)
+  - 🌐 **MCTiers** (`mctiers.com`)
+  - 🌐 **PvPTiers** (`pvptiers.com`)
+  - 🌐 **Subtiers** (`subtiers.net`)
   - 🇨🇿🇸🇰 **CZSKTiers.com** (Official Czechoslovak ranking via real-time REST API)
   - 🇨🇿🇸🇰 **CZSK Tiers (b0tfleyz)** (Czechoslovak community snapshot)
   - 🇨🇿🇸🇰 **CZSK Subtiers (b0tfleyz)** (Czechoslovak subtiers snapshot)
 
-- **👀 Closest Player Inspection (Key: H):**  
+- **👀 Closest Player Inspection (`Key: H`):**  
   Instantly displays the 3D skin, overall rank, regional standing, points, and kit badges of the player nearest to you.
 
-- **🎯 Intelligent Auto-Detect Kit (Key: Y):**  
+- **🎯 Intelligent Auto-Detect Kit (`Key: Y`):**  
   Scans your current inventory hotbar and automatically determines the active PvP kit (Sword, Axe, Crystal, Pot, UHC, Mace, NethPot, etc.).
 
-- **🔄 Fast Gamemode Switching (Keys: U / I):**  
+- **🔄 Fast Gamemode Switching (`Keys: U / I`):**  
   Cycle through competitive gamemodes on the fly without ever opening a menu.
 
 - **🎨 Deep In-Game Integration:**
   - Custom Tab list tier badges and colors
   - Chat nametags and rank prefixes
   - Text Display entity badges
-  - Dedicated config GUI (/tiers -config or ModMenu)
+  - Dedicated config GUI (`/tiers -config` or ModMenu)
 
 ---
 
 ## 📥 Downloads (All 16 Minecraft Versions)
 
-All pre-compiled and verified .jar packages are available in the [jars/](jars/) directory.  
-Simply download the JAR for your version and drop it into your .minecraft/mods/ folder!
+All pre-compiled and verified `.jar` packages are available in the [`jars/`](jars/) directory.  
+Simply download the JAR for your version and drop it into your `.minecraft/mods/` folder!
 
 | Minecraft Version | Java Requirement | Direct Download Link | Size |
 | :--- | :---: | :--- | :---: |
@@ -92,7 +92,7 @@ Simply download the JAR for your version and drop it into your .minecraft/mods/ 
 
 The repository is organized into distinct directories for source code and compiled binaries:
 
-\\\
+```text
 CZ-SK-MultiTiers/
 ├── assets/                    # Screenshots and branding assets used in documentation
 │   ├── tiers-ukazka.png
@@ -113,7 +113,7 @@ CZ-SK-MultiTiers/
 │   └── 1.21-1.21.1/           # Source code for Minecraft 1.21 & 1.21.1
 ├── .gitignore
 └── README.md
-\\\
+```
 
 ---
 
@@ -122,23 +122,23 @@ CZ-SK-MultiTiers/
 To compile the mod from source for any version:
 
 1. Clone the repository:
-   \\\ash
+   ```bash
    git clone https://github.com/Ahojda231/CZ-SK-MultiTiers.git
-   \\\
-2. Navigate into your desired version folder, for example sources/1.21.4:
-   \\\ash
+   ```
+2. Navigate into your desired version folder, for example `sources/1.21.4`:
+   ```bash
    cd sources/1.21.4
-   \\\
+   ```
 3. Run the Gradle build:
    - **On Linux / macOS:**
-     \\\ash
+     ```bash
      ./gradlew build
-     \\\
+     ```
    - **On Windows:**
-     \\\powershell
+     ```powershell
      .\gradlew.bat build
-     \\\
-4. The compiled JAR will be generated in uild/libs/.
+     ```
+4. The compiled JAR will be generated in `build/libs/`.
 
 ---
 
