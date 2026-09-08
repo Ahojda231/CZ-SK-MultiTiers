@@ -80,7 +80,7 @@ For quick access to all 16 versions at once, download the pre-packaged bundle ar
 
 | Package Archive | Contents | Recommended For |
 | :--- | :--- | :--- |
-| [🗜️ **CZ-SK-MultiTIers-v1.0.0-All-Jars.rar**](jars/CZ-SK-MultiTIers-v1.0.0-All-Jars.rar) | All 16 `.jar` files (v1.0.0) | WinRAR users (ultra-compact ~5.4 MB solid archive) |
+| [🗜️ **CZ-SK-MultiTIers-v1.0.0-All-Jars.rar**](https://github.com/Ahojda231/CZ-SK-MultiTiers/releases/download/v1.0.0/CZ-SK-MultiTIers-v1.0.0-All-Jars.rar) | All 16 `.jar` files (v1.0.0) | WinRAR users (ultra-compact ~5.4 MB solid archive) |
 | [🗜️ **CZ-SK-MultiTIers-v1.0.0-All-Jars.zip**](https://github.com/Ahojda231/CZ-SK-MultiTiers/releases/download/v1.0.0/CZ-SK-MultiTIers-v1.0.0-All-Jars.zip) | All 16 `.jar` files (v1.0.0) | Universal ZIP extractors (~70 MB) |
 | [🗜️ **CZ-SK-MultiTIers-v1.0.0-Complete-Folder.rar**](https://github.com/Ahojda231/CZ-SK-MultiTiers/releases/download/v1.0.0/CZ-SK-MultiTIers-v1.0.0-Complete-Folder.rar) | Full repository (all 16 jars, 8 source trees, assets, docs) | Developers & complete offline archive (~10.6 MB) |
 
