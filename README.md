@@ -21,17 +21,21 @@
 
 ## 📸 In-Game Showcase
 
-### 🔍 In-Game Player Profile & Tier Display
-![In-Game Showcase](assets/tiers-ukazka.png)
+### ⚙️ In-Game Configuration GUI (`/tiers -config`)
+Configure all features, toggle individual tierlist integrations (Global & CZ/SK), adjust rendering, and customize HUD badges directly in-game using the `/tiers -config` command:
+
+![In-Game Configuration GUI](assets/tiers-ukazka.png)
+*Interactive settings GUI opened via `/tiers -config` or ModMenu*
 
 <br>
 
-### ⚙️ Independent Dual Configuration Panels (`/tiers -config`)
+### 🔍 Dual-Tab Player Profile Inspection (`Key: H` or `/tiers <player>`)
+Inspect any nearby player or yourself in real time with instant tab switching between Global and Czechoslovak competitive rankings:
 
-| 🌐 Global Leaderboards Panel | 🇨🇿🇸🇰 CZ/SK Community Leaderboards Panel |
+| 🌐 Global Leaderboards Tab (`[Globální]`) | 🇨🇿🇸🇰 CZ/SK Community Leaderboards Tab (`[CZ/SK]`) |
 | :---: | :---: |
-| ![Global Tiers Config](assets/tiers-global.png) | ![CZ/SK Tiers Config](assets/tiers-czsk.png) |
-| *MCTiers, PvPTiers & Subtiers configuration* | *CZSKTiers.com, CZSK (b0tfleyz) & Subtiers configuration* |
+| ![Global Tiers Profile](assets/tiers-global.png) | ![CZ/SK Tiers Profile](assets/tiers-czsk.png) |
+| *Displays MCTiers, PvPTiers & Subtiers rankings* | *Displays CZSKTiers.com, CZSK (b0tfleyz) & Subtiers rankings* |
 
 ---
 
@@ -45,8 +49,11 @@
   - 🇨🇿🇸🇰 **CZSK Tiers (b0tfleyz)** (Czechoslovak community snapshot)
   - 🇨🇿🇸🇰 **CZSK Subtiers (b0tfleyz)** (Czechoslovak subtiers snapshot)
 
-- **👀 Closest Player Inspection (`Key: H`):**  
-  Instantly displays the 3D skin, overall rank, regional standing, points, and kit badges of the player nearest to you.
+- **👀 Closest Player Inspection (`Key: H` or `/tiers <player>`):**  
+  Instantly displays the 3D skin, overall rank, regional standing, points, and kit badges of the player nearest to you with tab switching between Global and CZ/SK rankings.
+
+- **⚙️ In-Game Configuration (`/tiers -config`):**  
+  Open the settings GUI directly with `/tiers -config` to customize visible tierlists, kit colors, badges, and render preferences.
 
 - **🎯 Intelligent Auto-Detect Kit (`Key: Y`):**  
   Scans your current inventory hotbar and automatically determines the active PvP kit (Sword, Axe, Crystal, Pot, UHC, Mace, NethPot, etc.).
@@ -64,8 +71,20 @@
 
 ## 📥 Downloads (All 16 Minecraft Versions)
 
-All pre-compiled and verified `.jar` packages are available in the [`jars/`](jars/) directory.  
+All pre-compiled and verified `.jar` packages are available in the [`jars/`](jars/) directory as well as the official [GitHub Releases](https://github.com/Ahojda231/CZ-SK-MultiTiers/releases/tag/v1.0.0).  
 Simply download the JAR for your version and drop it into your `.minecraft/mods/` folder!
+
+### 📦 All-In-One Release Bundles
+
+For quick access to all 16 versions at once, download the pre-packaged bundle archive from the [GitHub Releases](https://github.com/Ahojda231/CZ-SK-MultiTiers/releases/tag/v1.0.0):
+
+| Package Archive | Contents | Recommended For |
+| :--- | :--- | :--- |
+| [🗜️ **CZ-SK-MultiTIers-v1.0.0-All-Jars.rar**](jars/CZ-SK-MultiTIers-v1.0.0-All-Jars.rar) | All 16 `.jar` files (v1.0.0) | WinRAR users (ultra-compact ~5.4 MB solid archive) |
+| [🗜️ **CZ-SK-MultiTIers-v1.0.0-All-Jars.zip**](https://github.com/Ahojda231/CZ-SK-MultiTiers/releases/download/v1.0.0/CZ-SK-MultiTIers-v1.0.0-All-Jars.zip) | All 16 `.jar` files (v1.0.0) | Universal ZIP extractors (~70 MB) |
+| [🗜️ **CZ-SK-MultiTIers-v1.0.0-Complete-Folder.rar**](https://github.com/Ahojda231/CZ-SK-MultiTiers/releases/download/v1.0.0/CZ-SK-MultiTIers-v1.0.0-Complete-Folder.rar) | Full repository (all 16 jars, 8 source trees, assets, docs) | Developers & complete offline archive (~10.6 MB) |
+
+### 🎮 Individual Mod JARs
 
 | Minecraft Version | Java Requirement | Direct Download Link | Size |
 | :--- | :---: | :--- | :---: |
