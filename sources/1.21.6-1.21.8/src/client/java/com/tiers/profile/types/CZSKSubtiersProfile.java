@@ -18,7 +18,7 @@ import static com.tiers.TiersClient.userAgent;
 
 public class CZSKSubtiersProfile extends SuperProfile {
     public static final ResourceLocation CZSK_SUBTIERS_IMAGE = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/czsk_subtiers_logo.png");
-    private static final String SNAPSHOT_URL = "https://b0tfleyz.github.io/CZSKtiers/data/subtiers/overall.json";
+    private static final String SNAPSHOT_URL = "https://tierlist.slux.cz/data/subtiers/overall.json";
 
     private static volatile JsonObject cachedSnapshot;
     private static volatile long lastFetchTime = 0;

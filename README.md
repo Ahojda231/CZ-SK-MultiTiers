@@ -37,7 +37,7 @@ Inspect any nearby player or yourself in real time with instant tab switching be
 | 🌐 Global Leaderboards Tab (`[Globální]`) | 🇨🇿🇸🇰 CZ/SK Community Leaderboards Tab (`[CZ/SK]`) |
 | :---: | :---: |
 | ![Global Tiers Profile](assets/tiers-global.png) | ![CZ/SK Tiers Profile](assets/tiers-czsk.png) |
-| *Displays MCTiers, PvPTiers & Subtiers rankings* | *Displays CZSKTiers.com, CZSK (b0tfleyz) & Subtiers rankings* |
+| *Displays MCTiers, PvPTiers & Subtiers rankings* | *Displays CZSKTiers.com, CZSK (tierlist.slux.cz) & Subtiers rankings* |
 
 ---
 
@@ -48,8 +48,8 @@ Inspect any nearby player or yourself in real time with instant tab switching be
   - 🌐 **PvPTiers** (`pvptiers.com`)
   - 🌐 **Subtiers** (`subtiers.net`)
   - 🇨🇿🇸🇰 **CZSKTiers.com** (Official Czechoslovak ranking via real-time REST API)
-  - 🇨🇿🇸🇰 **CZSK Tiers (b0tfleyz)** (Czechoslovak community snapshot)
-  - 🇨🇿🇸🇰 **CZSK Subtiers (b0tfleyz)** (Czechoslovak subtiers snapshot)
+  - 🇨🇿🇸🇰 **CZSK Tiers** (`tierlist.slux.cz` real-time community ranking)
+  - 🇨🇿🇸🇰 **CZSK Subtiers** (`tierlist.slux.cz` real-time community subtiers)
 
 - **👀 Closest Player Inspection (`Key: H` or `/tiers <player>`):**  
   Instantly displays the 3D skin, overall rank, regional standing, points, and kit badges of the player nearest to you with tab switching between Global and CZ/SK rankings.
